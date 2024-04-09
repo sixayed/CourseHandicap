@@ -1,0 +1,101 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Handicap Calculator</title>
+    <link rel="stylesheet" th:href="@{/styles.css}" href="styles.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="info-container" id="info-container">
+        <div id="calc-form">
+            <label>Handicap Index: <input type="text" id="handicapIndex"/></label><br/>
+            <label>Slope Rating: <input type="text" id="slopeRating"/></label><br/>
+            <label>Course Rating: <input type="text" id="courseRating"/></label><br/>
+            <label>Par: <input type="text" id="par"/></label><br/>
+
+            <div class="buttons" id="isNineHoles">
+                <button id="button1" class="hole-btn" onclick="toggleButton(1)">9 holes</button>
+                <button id="button2" class="hole-btn" onclick="toggleButton(2)">18 holes</button>
+            </div>
+
+            <button class="calculateButton" id="calculate-btn">Calculate</button>
+        </div>
+
+        <button type="button" id="back-btn" style="display: none;">Back</button>
+
+        <div id="result-container" style="display: none;">
+            <div class="result-content">
+                <h2 id="course-handicap"></h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var variable;
+
+    $(document).ready(function() {
+        $('#calculate-btn').click(handleCalculate);
+        $('#back-btn').click(handleBack);
+    });
+
+    function handleCalculate() {
+        var details = {
+            handicapIndex: parseFloat($('#handicapIndex').val()),
+            slopeRating: parseInt($('#slopeRating').val()),
+            courseRating: parseFloat($('#courseRating').val()),
+            par: parseInt($('#par').val()),
+            isNineHoles: variable
+        };
+
+        $.ajax({
+            type: 'POST',
+            url: '/',
+            contentType: 'application/json',
+            data: JSON.stringify(details),
+            success: handleSuccess,
+            error: handleError
+        });
+    }
+
+    function handleSuccess(result) {
+        $('#calc-form').hide();
+        $('#result-container').show();
+        $('#back-btn').show();
+        $('#course-handicap').text("Your Course Handicap is: +  " + result);
+    }
+
+    function handleError(jqxhr) {
+        var errors = JSON.parse(jqxhr.responseText)
+        $('.error-message').remove();
+        errors.forEach(function(fieldError) {
+            $('#' + fieldError.field).after('<span class="error-message">' + fieldError.message + '</span>');
+        });
+    }
+
+    function handleBack() {
+        $('#result-container').hide();
+        $('#calc-form').show();
+        $('#back-btn').hide();
+    }
+
+    function toggleButton(buttonId) {
+        var $selectedButton = $('#button' + buttonId);
+        var isActive = $selectedButton.hasClass('active');
+
+        if (!isActive) {
+            $('.hole-btn').removeClass('active');
+            $selectedButton.addClass('active');
+
+            if (buttonId === 1) {
+                variable = false;
+            } else if (buttonId === 2) {
+                variable = true;
+            }
+        }
+    }
+</script>
+
+</body>
+</html>
