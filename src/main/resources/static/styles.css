@@ -7,6 +7,7 @@ body {
 
 .container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     height: 100vh;
@@ -102,6 +103,14 @@ body {
 .buttons {
     display: flex;
     justify-content: center;
+}
+
+.title {
+    text-align: center;
+    font-size: 36px;
+    text-transform: uppercase;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 .error-message {
