@@ -33,6 +33,6 @@ public class CalculationRestController {
 
             return ResponseEntity.badRequest().body(errors);
         }
-        return ResponseEntity.ok(Double.toString(courseHandicapService.calculateHandicap(courseDetails)));
+        return ResponseEntity.ok(Long.toString(courseHandicapService.calculateHandicap(courseDetails)));
     }
 }

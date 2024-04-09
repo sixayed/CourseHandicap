@@ -64,7 +64,11 @@
         $('#calc-form').hide();
         $('#result-container').show();
         $('#back-btn').show();
-        $('#course-handicap').text("Your Course Handicap is: +  " + result);
+        $('.error-message').remove();
+
+        var sign = result >= 0 ? "+" : "-";
+        var courseHandicapText = "Your Course Handicap is: " + sign + " " + Math.abs(result);
+        $('#course-handicap').text(courseHandicapText);
     }
 
     function handleError(jqxhr) {
